@@ -1,6 +1,5 @@
 // Google Analytics 4 Configuration
-// Replace 'G-XXXXXXXXXX' with your actual Google Analytics Measurement ID
-export const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+export const GA_MEASUREMENT_ID = 'G-LVB7MCQZFT';
 
 // Initialize Google Analytics
 export const initGA = (): void => {
