@@ -49,9 +49,56 @@ npm run preview
 
 ---
 
-## 🌐 GitHub Pages Deployment
+## 🌐 Deployment Options
 
-### Automatic Deployment (Recommended)
+### Option 1: Netlify (Recommended - Easiest)
+
+#### Method A: Drag & Drop (2 minutes)
+
+1. Build the project:
+   ```bash
+   npm run build
+   ```
+
+2. Go to [https://app.netlify.com/drop](https://app.netlify.com/drop)
+
+3. Drag the `dist` folder onto the page
+
+4. Your site is live! Get a URL like `agapy-energies.netlify.app`
+
+#### Method B: Connect GitHub (Auto-deploy on push)
+
+1. Go to [https://app.netlify.com](https://app.netlify.com) and sign up/login
+
+2. Click **"Add new site"** → **"Import an existing project"**
+
+3. Connect your GitHub repository
+
+4. Configure build settings:
+   - **Build command:** `npm run build`
+   - **Publish directory:** `dist`
+
+5. Click **"Deploy site"**
+
+6. (Optional) Add custom domain:
+   - Go to **Site settings** → **Domain management**
+   - Click **"Add custom domain"**
+   - Enter `agapyenergies.co.ug`
+   - Follow DNS instructions
+
+#### Features Included:
+- ✅ Free HTTPS/SSL certificate
+- ✅ Automatic deployments on git push
+- ✅ Form submissions (contact form works without backend!)
+- ✅ Global CDN for fast loading
+- ✅ Custom domain support
+- ✅ 100GB free bandwidth/month
+
+---
+
+### Option 2: GitHub Pages
+
+#### Automatic Deployment (Recommended)
 
 This project includes a GitHub Actions workflow that automatically deploys to GitHub Pages on every push to the `main` branch.
 
@@ -75,7 +122,7 @@ This project includes a GitHub Actions workflow that automatically deploys to Gi
 3. **Your site will be live at:**
    - `https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/`
 
-### Manual Deployment
+#### Manual Deployment
 
 If you prefer to deploy manually:
 
@@ -117,6 +164,30 @@ npm run build
 | Background | `#FFFFFF` | Main background |
 | Light Gray | `#F8F9FA` | Section backgrounds |
 | Text Dark | `#2D3436` | Body text |
+
+---
+
+## 📬 Contact Form (Netlify Forms)
+
+The contact form is configured to work with **Netlify Forms** (free tier: 100 submissions/month).
+
+### How it works:
+1. Visitors fill out the form on your website
+2. Netlify captures the submission automatically
+3. You receive an email notification
+4. View all submissions in your Netlify dashboard under **Forms**
+
+### Setup:
+- No additional configuration needed!
+- The form has `data-netlify="true"` attribute
+- Netlify automatically detects and processes form submissions
+- Includes honeypot spam protection
+
+### Enable Email Notifications:
+1. Go to your Netlify site dashboard
+2. Navigate to **Forms** → **Notifications**
+3. Add your email: `agapyenergies@gmail.com`
+4. You'll now receive email for every form submission!
 
 ---
 
