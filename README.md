@@ -130,4 +130,4 @@ npm run build
 
 ## 📄 License
 
-© 2024 Agapy Energies Ltd. All rights reserved.
+© 2026 Agapy Energies Ltd. All rights reserved.
