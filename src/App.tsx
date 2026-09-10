@@ -13,6 +13,8 @@ import {
   Send,
   ChevronUp,
 } from 'lucide-react';
+import ConsentBanner from './components/ConsentBanner';
+import { initGA, hasConsent, removeGA, trackCTAClick, trackFormSubmission, trackWhatsAppClick } from './utils/analytics';
 
 // Animation wrapper component
 function AnimatedSection({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -367,6 +369,11 @@ function ContactSection() {
     e.preventDefault();
     setIsSubmitted(true);
     
+    // Track form submission if user has given consent
+    if (hasConsent()) {
+      trackFormSubmission('contact-form');
+    }
+    
     // Also open WhatsApp with the message
     const message = `Hello Agapy Energies!%0A%0AName: ${formData.name}%0APhone: ${formData.phone}%0AOrder Details: ${formData.message}`;
     window.open(`https://wa.me/256790357777?text=${message}`, '_blank');
@@ -555,6 +562,85 @@ function ContactSection() {
   );
 }
 
+// Privacy Policy Section
+function PrivacySection() {
+  return (
+    <section id="privacy" className="py-20 lg:py-28 bg-bg-light">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AnimatedSection>
+          <h2 className="text-3xl sm:text-4xl font-bold text-text-dark mb-8">
+            Privacy Policy
+          </h2>
+          <div className="prose prose-lg text-text-gray space-y-6">
+            <p className="text-sm text-text-gray/70">
+              <strong>Last updated:</strong> January 2026
+            </p>
+
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-text-dark mb-3">1. Information We Collect</h3>
+              <p>We collect information you provide directly, such as your name, phone number, and order details when you submit our contact form. We also collect usage data through cookies and analytics tools when you consent.</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-text-dark mb-3">2. How We Use Your Information</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>To respond to your inquiries and process gas orders</li>
+                <li>To improve our website and services</li>
+                <li>To analyze website traffic and user behavior (with consent)</li>
+                <li>To communicate with you about our services</li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-text-dark mb-3">3. Cookies & Analytics</h3>
+              <p>We use Google Analytics to understand how visitors interact with our website. This only occurs if you explicitly accept cookies via our consent banner. You can withdraw your consent at any time by clearing your browser data.</p>
+              <p className="mt-2"><strong>Types of cookies we use:</strong></p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Essential cookies:</strong> Required for the website to function</li>
+                <li><strong>Analytics cookies:</strong> Google Analytics (only with consent)</li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-text-dark mb-3">4. Your Rights</h3>
+              <p>You have the right to:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Accept or decline cookie tracking</li>
+                <li>Request access to your personal data</li>
+                <li>Request deletion of your data</li>
+                <li>Withdraw consent at any time</li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-text-dark mb-3">5. Contact Us</h3>
+              <p>For privacy-related inquiries, contact us at:</p>
+              <p className="mt-2">
+                📧 <a href="mailto:agapyenergies@gmail.com" className="text-primary-green hover:underline">agapyenergies@gmail.com</a><br />
+                📞 <a href="tel:+256790357777" className="text-primary-green hover:underline">+256 790 357 777</a>
+              </p>
+            </div>
+
+            {/* Cookie Settings Button */}
+            <div className="text-center pt-4">
+              <button
+                onClick={() => {
+                  localStorage.removeItem('cookieConsent');
+                  window.location.reload();
+                }}
+                className="inline-flex items-center gap-2 bg-primary-red text-white px-6 py-3 rounded-full font-semibold hover:bg-primary-red-dark transition-all"
+              >
+                <i className="fas fa-cookie-bite" />
+                Manage Cookie Preferences
+              </button>
+            </div>
+          </div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
 // Footer Component
 function Footer() {
   return (
@@ -598,6 +684,7 @@ function Footer() {
               <li><a href="#about" className="text-gray-400 hover:text-primary-green transition-colors">About Us</a></li>
               <li><a href="#mission" className="text-gray-400 hover:text-primary-green transition-colors">Our Mission</a></li>
               <li><a href="#contact" className="text-gray-400 hover:text-primary-green transition-colors">Contact</a></li>
+              <li><a href="#privacy" className="text-gray-400 hover:text-primary-green transition-colors">Privacy Policy</a></li>
             </ul>
           </div>
 
@@ -640,12 +727,19 @@ function Footer() {
 
 // WhatsApp Floating Button
 function WhatsAppButton() {
+  const handleClick = () => {
+    if (hasConsent()) {
+      trackWhatsAppClick();
+    }
+  };
+
   return (
     <a
       href="https://wa.me/256790357777?text=Hello%20Agapy%20Energies!%20I'd%20like%20to%20order%20gas."
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all animate-pulse-green"
+      onClick={handleClick}
+      className="fixed bottom-24 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all animate-pulse-green"
       aria-label="Chat on WhatsApp"
     >
       <i className="fab fa-whatsapp text-white text-2xl" />
@@ -655,6 +749,31 @@ function WhatsAppButton() {
 
 // Main App Component
 export default function App() {
+  const [showConsent, setShowConsent] = useState(false);
+
+  useEffect(() => {
+    // Check if user has already made a consent choice
+    const consent = localStorage.getItem('cookieConsent');
+    
+    if (!consent) {
+      // No choice made yet, show banner
+      setShowConsent(true);
+    } else if (consent === 'accepted') {
+      // User previously accepted, initialize GA
+      initGA();
+    }
+  }, []);
+
+  const handleAccept = () => {
+    initGA();
+    setShowConsent(false);
+  };
+
+  const handleDecline = () => {
+    removeGA();
+    setShowConsent(false);
+  };
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -663,9 +782,11 @@ export default function App() {
         <AboutSection />
         <MissionSection />
         <ContactSection />
+        <PrivacySection />
       </main>
       <Footer />
       <WhatsAppButton />
+      {showConsent && <ConsentBanner onAccept={handleAccept} onDecline={handleDecline} />}
     </div>
   );
 }
