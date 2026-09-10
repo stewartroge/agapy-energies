@@ -361,12 +361,21 @@ function ContactSection() {
     phone: '',
     message: '',
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // WhatsApp message
+    setIsSubmitted(true);
+    
+    // Also open WhatsApp with the message
     const message = `Hello Agapy Energies!%0A%0AName: ${formData.name}%0APhone: ${formData.phone}%0AOrder Details: ${formData.message}`;
     window.open(`https://wa.me/256790357777?text=${message}`, '_blank');
+    
+    // Reset form after submission
+    setTimeout(() => {
+      setFormData({ name: '', phone: '', message: '' });
+      setIsSubmitted(false);
+    }, 3000);
   };
 
   return (
@@ -462,13 +471,26 @@ function ContactSection() {
             {/* Right - Contact Form */}
             <div className="bg-bg-light rounded-2xl p-8">
               <h3 className="text-2xl font-bold text-text-dark mb-6">Send Us a Message</h3>
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form 
+                name="contact" 
+                method="POST" 
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                onSubmit={handleSubmit} 
+                className="space-y-5"
+              >
+                <input type="hidden" name="form-name" value="contact" />
+                <p className="hidden">
+                  <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                </p>
+                
                 <div>
                   <label className="block text-sm font-medium text-text-dark mb-2">
                     Full Name
                   </label>
                   <input
                     type="text"
+                    name="name"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -483,6 +505,7 @@ function ContactSection() {
                   </label>
                   <input
                     type="tel"
+                    name="phone"
                     required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -496,6 +519,7 @@ function ContactSection() {
                     Order Details / Message
                   </label>
                   <textarea
+                    name="message"
                     required
                     rows={4}
                     value={formData.message}
@@ -507,10 +531,20 @@ function ContactSection() {
 
                 <button
                   type="submit"
-                  className="w-full bg-primary-green text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary-green-dark transition-all hover:shadow-lg flex items-center justify-center gap-2"
+                  disabled={isSubmitted}
+                  className="w-full bg-primary-green text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary-green-dark transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5" />
-                  Send via WhatsApp
+                  {isSubmitted ? (
+                    <>
+                      <i className="fas fa-check-circle" />
+                      Message Sent!
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </form>
             </div>
@@ -590,7 +624,7 @@ function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">
-            © 2024 Agapy Energies Ltd. All rights reserved.
+            © 2026 Agapy Energies Ltd. All rights reserved.
           </p>
           <a
             href="#home"
